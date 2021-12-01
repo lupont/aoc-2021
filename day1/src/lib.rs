@@ -1,4 +1,4 @@
-pub fn get_input() -> Vec<u32> {
+fn get_input() -> Vec<u32> {
     include_str!("../../inputs/day1/input.txt")
         .split('\n')
         .map(str::parse::<u32>)
@@ -7,43 +7,20 @@ pub fn get_input() -> Vec<u32> {
 }
 
 pub fn p1() -> u32 {
-    let input = get_input();
-
-    let mut increases = 0;
-    let mut prev = None;
-
-    for curr_val in input {
-        if let Some(prev_val) = prev {
-            if curr_val > prev_val {
-                increases += 1;
-            }
-        }
-
-        prev = Some(curr_val);
-    }
-
-    increases
+    get_input()
+        .windows(2)
+        .filter(|w| w[1] > w[0])
+        .count() as u32
 }
 
 pub fn p2() -> u32 {
-    let input = get_input();
-
-    let mut increases = 0;
-    let mut prev = None;
-
-    for curr_val in input.windows(3) {
-        let curr_sum = curr_val.iter().sum::<u32>();
-
-        if let Some(prev_sum) = prev {
-            if curr_sum > prev_sum {
-                increases += 1;
-            }
-        }
-
-        prev = Some(curr_sum);
-    }
-
-    increases
+    get_input()
+        .windows(3)
+        .map(|w| w.iter().sum::<u32>())
+        .collect::<Vec<_>>()
+        .windows(2)
+        .filter(|w| w[1] > w[0])
+        .count() as u32
 }
 
 #[cfg(test)]
@@ -57,8 +34,14 @@ mod tests {
     }
 
     #[test]
-    fn sample_input_works() {
+    fn first_problem_is_correct() {
         let answer = p1();
         assert_eq!(answer, 1557);
+    }
+
+    #[test]
+    fn second_problem_is_correct() {
+        let answer = p2();
+        assert_eq!(answer, 1608);
     }
 }
